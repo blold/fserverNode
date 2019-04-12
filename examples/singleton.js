@@ -80,7 +80,7 @@ const buildQuery = function(queryObj) {
   console.log('------ BuildQuery ---------')
   const sortPayOptions = {};
   for (const key of Object.keys(queryObj).sort()) {
-    sortPayOptions[key] = queryObj[key];
+    if(queryObj[key]) sortPayOptions[key] = queryObj[key];
   }
   let payOptionQuery = "";
   for (const key of Object.keys(sortPayOptions).sort()) {
