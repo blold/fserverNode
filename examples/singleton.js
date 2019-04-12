@@ -115,7 +115,7 @@ notificationRouter.post(miniServerAsyncNotiPath, function(req, res) {
     .then(function(result) {
       console.log("A payment notification comes in ");
       console.dir(result);
-      const signString = signQuery(buildQuery(result));
+      const signString = signQuery(buildQuery(result.xml));
       console.log(signString)
       return instance.verifyPaymentNotificationAsync(req.body);
     })
