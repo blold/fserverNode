@@ -25,10 +25,10 @@ const BackendApiCore = require(baseAbsPath + "../lib/BackendApiCore").default;
 class BackendApiSingleton extends BackendApiCore {
   constructor(enforcer) {
     if (enforcer != singletonEnforcer) throw "Cannot construct singleton";
-
+ 
     super(enforcer);
   }
-
+ 
   static get instance() {
     if (!this[singleton]) {
       this[singleton] = new BackendApiSingleton(singletonEnforcer);
@@ -50,7 +50,7 @@ console.log(
   instance.mchSecret
 );
 
-const miniServerPort = 9009;
+const miniServerPort = 8888;
 const miniServerAsyncNotiPath = "/async-cb/v1/wechat-pubsrv/payment/notify";
 
 /* Mini server for async notification */
@@ -70,12 +70,53 @@ app.use(bodyParser.raw({ type: "*/*" }));
 const notificationRouter = express.Router({
   mergeParams: true
 });
+
+/**
+ * 生成排序后的支付参数 query
+ * @param queryObj
+ * @returns {Promise.<string>}
+ */
+const buildQuery = function(queryObj) {
+  console.log('------ BuildQuery ---------')
+  const sortPayOptions = {};
+  for (const key of Object.keys(queryObj).sort()) {
+    sortPayOptions[key] = queryObj[key];
+  }
+  let payOptionQuery = "";
+  for (const key of Object.keys(sortPayOptions).sort()) {
+    payOptionQuery += key + "=" + sortPayOptions[key] + "&";
+  }
+  payOptionQuery = payOptionQuery.substring(0, payOptionQuery.length - 1);
+  console.log(payOptionQuery)
+  console.log('------ BuildQuery End ---------')
+  return payOptionQuery;
+};
+
+/**
+ * 对 query 进行签名
+ * @param queryStr
+ * @returns {Promise.<string>}
+ */
+const signQuery = function(queryStr) {
+  console.log('------ signQuery ------')
+  console.log(queryStr)
+  // queryStr = queryStr + "&key=" + config.partner_key;
+  queryStr = queryStr + "&key=" + '9bUOaJd43b827gBThybltsRTJ5jQFf69';
+  console.log(queryStr)
+  const md5 = require("md5");
+  const md5Sign = md5(queryStr);
+  console.log('------ signQuery End ------')
+  return md5Sign.toUpperCase();
+};
+
 notificationRouter.post(miniServerAsyncNotiPath, function(req, res) {
   instance
     .xmlStr2ObjAsync(req.body)
     .then(function(result) {
       console.log("A payment notification comes in ");
       console.dir(result);
+      const signString = signQuery(buildQuery(result));
+      console.log(signString)
       return instance.verifyPaymentNotificationAsync(req.body);
     })
     .then(function(trueOrFalse) {
@@ -124,7 +165,7 @@ app.listen(miniServerPort, function() {
     )
     .then(function(respBody) {
       console.log('--------- 1 ------')
-      console.log(instance.xmlStr2ObjAsync(respBody));
+      console.log(respBody);
       return instance.xmlStr2ObjAsync(respBody);
     })
     .then(function(result) {
@@ -152,7 +193,7 @@ const payUnifiedOrder = function(codeUrl, indendedResultCode, intendedErrCode) {
     mch_id: instance.mchId,
     out_trade_no: theUnifiedOrderInfo.out_trade_no,
     prepay_id: theUnifiedOrderInfo.prepay_id,
-    indended_result_code: indendedResultCode,
+    intended_result_code: indendedResultCode,
     intended_err_code: intendedErrCode
   };
   return new Promise(function(resolve, reject) {
