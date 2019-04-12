@@ -120,6 +120,8 @@ notificationRouter.post(miniServerAsyncNotiPath, function(req, res) {
       return instance.verifyPaymentNotificationAsync(req.body);
     })
     .then(function(trueOrFalse) {
+      console.log('------ trueOrFalse ------')
+      console.log(trueOrFalse)
       const respStr = instance.generateRespStrSyncForPaymentNotification(
         trueOrFalse
       );
