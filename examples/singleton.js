@@ -101,7 +101,7 @@ const signQuery = function(queryStr) {
   console.log('------ signQuery ------')
   console.log(queryStr)
   // queryStr = queryStr + "&key=" + config.partner_key;
-  queryStr = queryStr + "&key=" + '9bUOaJd43b827gBThybltsRTJ5jQFf69';
+  queryStr = queryStr + "&key=" + 'mch_secret';
   console.log(queryStr)
   const md5 = require("md5");
   const md5Sign = md5(queryStr);
@@ -146,6 +146,16 @@ app.listen(miniServerPort, function() {
   console.log("Mini server listening on port " + miniServerPort);
 
   /* Unified order API of `NATIVE` type. */
+  // const outTradeNo = gen32bytes();
+  // const notifyUrl =
+  //   "http://" + instance.callbackNotifyGateway + miniServerAsyncNotiPath;
+  // const nonceStr = gen32bytes();
+  // const body = "This is a testing order";
+  // const totalFeeCents = getRandomInt(100, 10000);
+  // const tradeType = "NATIVE";
+  // const openId = null;
+  // const limitPay = null;
+
   const outTradeNo = gen32bytes();
   const notifyUrl =
     "http://" + instance.callbackNotifyGateway + miniServerAsyncNotiPath;
