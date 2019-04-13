@@ -206,7 +206,8 @@ const payUnifiedOrder = function(codeUrl, indendedResultCode, intendedErrCode) {
     out_trade_no: theUnifiedOrderInfo.out_trade_no,
     prepay_id: theUnifiedOrderInfo.prepay_id,
     intended_result_code: indendedResultCode,
-    intended_err_code: intendedErrCode
+    intended_err_code: intendedErrCode, 
+    Attach: 'payType=1&goodsType=2'
   };
   return new Promise(function(resolve, reject) {
     request.post(
