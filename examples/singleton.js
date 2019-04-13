@@ -165,7 +165,7 @@ app.listen(miniServerPort, function() {
   const tradeType = "NATIVE";
   const openId = null;
   const limitPay = null;
-  const attch = '12321321321';
+  const attach = '12321321321';
 
   instance 
     .queryUnifiedOrderRespAsync(
@@ -175,7 +175,7 @@ app.listen(miniServerPort, function() {
       body,
       totalFeeCents,
       tradeType,
-      attch
+      attach
     )
     .then(function(respBody) {
       console.log('--------- 1 ------')
